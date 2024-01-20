@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using System.Text.Json;
 
 namespace MagicVilla_VillaAPI.Controllers
 {
@@ -33,7 +34,7 @@ namespace MagicVilla_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<APIResponse>> GetVillas([FromQuery(Name = "Filter-Occupancy")]int? occupancy, [FromQuery]string? search)
+        public async Task<ActionResult<APIResponse>> GetVillas([FromQuery(Name = "Filter-Occupancy")]int? occupancy, [FromQuery]string? search, int pageSize = 2, int pageNumber = 1)
         {
             try
             {
@@ -41,16 +42,20 @@ namespace MagicVilla_VillaAPI.Controllers
                 IEnumerable<Villa> villaList;
                 if (occupancy > 0)
                 {
-                    villaList = await _dbVilla.GetAllAsync(i=>i.Occupancy==occupancy);
+                    villaList = await _dbVilla.GetAllAsync(u => u.Occupancy == occupancy, pageSize: pageSize,
+                        pageNumber: pageNumber);
                 }
                 else
                 {
-                    villaList = await _dbVilla.GetAllAsync();
+                    villaList = await _dbVilla.GetAllAsync(pageSize: pageSize,
+                        pageNumber: pageNumber);
                 }
                 if (!string.IsNullOrEmpty(search))
                 {
                     villaList = villaList.Where(i=>i.Amenity.ToLower().Contains(search)||i.Name.ToLower().Contains(search));
                 }
+                Pagination pagination = new Pagination() {PageNumber = pageNumber, PageSize = pageSize};
+                Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagination));
                 _response.Result = _mapper.Map<List<VillaDTO>>(villaList);
                 _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);

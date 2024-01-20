@@ -93,3 +93,4 @@ C:\Users\khalo\OneDrive\سطح المكتب\asp.net\MagicVilla\MagicVilla_VillaA
 C:\Users\khalo\OneDrive\سطح المكتب\asp.net\MagicVilla\MagicVilla_VillaAPI\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\khalo\OneDrive\سطح المكتب\asp.net\MagicVilla\MagicVilla_VillaAPI\bin\Debug\net7.0\Microsoft.AspNetCore.Mvc.Versioning.dll
 C:\Users\khalo\OneDrive\سطح المكتب\asp.net\MagicVilla\MagicVilla_VillaAPI\bin\Debug\net7.0\Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer.dll
+C:\Users\khalo\OneDrive\سطح المكتب\asp.net\MagicVilla\MagicVilla_VillaAPI\bin\Debug\net7.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
