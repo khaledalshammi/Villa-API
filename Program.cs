@@ -11,6 +11,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using MagicVilla_VillaAPI.Models;
+using MagicVilla_VillaAPI.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 /*Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo.File("log/villaLogs.txt", rollingInterval:RollingInterval.Day).CreateLogger();
@@ -31,13 +32,22 @@ builder.Services.AddScoped<IVillaNumberRepository, VillaNumberRepository>();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 //builder.Services.AddApiVersioning();
 var key = builder.Configuration.GetValue<string>("ApiSettings:Secret");
-builder.Services.AddControllers( option => {
-    option.CacheProfiles.Add("Default30",
-       new CacheProfile()
-       {
-           Duration = 30
-       });
+builder.Services.AddControllers(option =>
+{
+    /* option.CacheProfiles.Add("Default30",
+        new CacheProfile()
+        {
+            Duration = 30
+        });*/
+    /*option.Filters.Add<CustomExceptionFilter>();*/
 }).AddNewtonsoftJson();
+/*.ConfigureApiBehaviorOptions(option =>
+{
+    option.ClientErrorMapping[StatusCodes.Status500InternalServerError] = new ClientErrorData
+    {
+        Link = "https://khaled.com/500"
+    };
+});*/
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSingleton<ILogging, Logging>();
@@ -96,9 +106,24 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+//app.HandleError(app.Environment.IsDevelopment());
+/*app.UseExceptionHandler("/ErrorHandling/ProcessError");*/
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+ApplyMigration();
 app.Run();
+void ApplyMigration()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var _db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        if (_db.Database.GetPendingMigrations().Count() > 0)
+        {
+            _db.Database.Migrate();
+        }
+    }
+}

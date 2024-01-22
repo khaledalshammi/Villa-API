@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace MagicVillaVillaAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class AddIdentity : Migration
+    public partial class InsertData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -49,6 +51,45 @@ namespace MagicVillaVillaAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JwtTokenId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RefreshToken = table.Column<string>(name: "Refresh_Token", type: "nvarchar(max)", nullable: false),
+                    IsValid = table.Column<bool>(type: "bit", nullable: false),
+                    ExpiresAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Villas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Details = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Rate = table.Column<double>(type: "float", nullable: false),
+                    Sqft = table.Column<int>(type: "int", nullable: false),
+                    Occupancy = table.Column<int>(type: "int", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageLocalPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Amenity = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Villas", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -157,40 +198,38 @@ namespace MagicVillaVillaAPI.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.UpdateData(
-                table: "Villas",
-                keyColumn: "Id",
-                keyValue: 1,
-                column: "CreatedDate",
-                value: new DateTime(2024, 1, 18, 13, 2, 47, 566, DateTimeKind.Local).AddTicks(28));
+            migrationBuilder.CreateTable(
+                name: "VillaNumbers",
+                columns: table => new
+                {
+                    VillaNo = table.Column<int>(type: "int", nullable: false),
+                    VillaID = table.Column<int>(type: "int", nullable: false),
+                    SpecialDetails = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VillaNumbers", x => x.VillaNo);
+                    table.ForeignKey(
+                        name: "FK_VillaNumbers_Villas_VillaID",
+                        column: x => x.VillaID,
+                        principalTable: "Villas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
-            migrationBuilder.UpdateData(
+            migrationBuilder.InsertData(
                 table: "Villas",
-                keyColumn: "Id",
-                keyValue: 2,
-                column: "CreatedDate",
-                value: new DateTime(2024, 1, 18, 13, 2, 47, 566, DateTimeKind.Local).AddTicks(38));
-
-            migrationBuilder.UpdateData(
-                table: "Villas",
-                keyColumn: "Id",
-                keyValue: 3,
-                column: "CreatedDate",
-                value: new DateTime(2024, 1, 18, 13, 2, 47, 566, DateTimeKind.Local).AddTicks(39));
-
-            migrationBuilder.UpdateData(
-                table: "Villas",
-                keyColumn: "Id",
-                keyValue: 4,
-                column: "CreatedDate",
-                value: new DateTime(2024, 1, 18, 13, 2, 47, 566, DateTimeKind.Local).AddTicks(40));
-
-            migrationBuilder.UpdateData(
-                table: "Villas",
-                keyColumn: "Id",
-                keyValue: 5,
-                column: "CreatedDate",
-                value: new DateTime(2024, 1, 18, 13, 2, 47, 566, DateTimeKind.Local).AddTicks(42));
+                columns: new[] { "Id", "Amenity", "CreatedDate", "Details", "ImageLocalPath", "ImageUrl", "Name", "Occupancy", "Rate", "Sqft", "UpdatedDate" },
+                values: new object[,]
+                {
+                    { 1, "", new DateTime(2000, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Fusce 11 tincidunt maximus leo, sed scelerisque massa auctor sit amet. Donec ex mauris, hendrerit quis nibh ac, efficitur fringilla enim.", null, "https://placehold.co/600x401", "Royal Villa", 4, 200.0, 550, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, "", new DateTime(2000, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Fusce 11 tincidunt maximus leo, sed scelerisque massa auctor sit amet. Donec ex mauris, hendrerit quis nibh ac, efficitur fringilla enim.", null, "https://placehold.co/600x402", "Premium Pool Villa", 4, 300.0, 550, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3, "", new DateTime(2000, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Fusce 11 tincidunt maximus leo, sed scelerisque massa auctor sit amet. Donec ex mauris, hendrerit quis nibh ac, efficitur fringilla enim.", null, "https://placehold.co/600x403", "Luxury Pool Villa", 4, 400.0, 750, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 4, "", new DateTime(2000, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Fusce 11 tincidunt maximus leo, sed scelerisque massa auctor sit amet. Donec ex mauris, hendrerit quis nibh ac, efficitur fringilla enim.", null, "https://placehold.co/600x404", "Diamond Villa", 4, 550.0, 900, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 5, "", new DateTime(2000, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Fusce 11 tincidunt maximus leo, sed scelerisque massa auctor sit amet. Donec ex mauris, hendrerit quis nibh ac, efficitur fringilla enim.", null, "https://placehold.co/600x405", "Diamond Pool Villa", 4, 600.0, 1100, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -230,6 +269,11 @@ namespace MagicVillaVillaAPI.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VillaNumbers_VillaID",
+                table: "VillaNumbers",
+                column: "VillaID");
         }
 
         /// <inheritdoc />
@@ -251,45 +295,19 @@ namespace MagicVillaVillaAPI.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "RefreshTokens");
+
+            migrationBuilder.DropTable(
+                name: "VillaNumbers");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
-            migrationBuilder.UpdateData(
-                table: "Villas",
-                keyColumn: "Id",
-                keyValue: 1,
-                column: "CreatedDate",
-                value: new DateTime(2024, 1, 17, 16, 41, 41, 346, DateTimeKind.Local).AddTicks(9791));
-
-            migrationBuilder.UpdateData(
-                table: "Villas",
-                keyColumn: "Id",
-                keyValue: 2,
-                column: "CreatedDate",
-                value: new DateTime(2024, 1, 17, 16, 41, 41, 346, DateTimeKind.Local).AddTicks(9800));
-
-            migrationBuilder.UpdateData(
-                table: "Villas",
-                keyColumn: "Id",
-                keyValue: 3,
-                column: "CreatedDate",
-                value: new DateTime(2024, 1, 17, 16, 41, 41, 346, DateTimeKind.Local).AddTicks(9802));
-
-            migrationBuilder.UpdateData(
-                table: "Villas",
-                keyColumn: "Id",
-                keyValue: 4,
-                column: "CreatedDate",
-                value: new DateTime(2024, 1, 17, 16, 41, 41, 346, DateTimeKind.Local).AddTicks(9803));
-
-            migrationBuilder.UpdateData(
-                table: "Villas",
-                keyColumn: "Id",
-                keyValue: 5,
-                column: "CreatedDate",
-                value: new DateTime(2024, 1, 17, 16, 41, 41, 346, DateTimeKind.Local).AddTicks(9805));
+            migrationBuilder.DropTable(
+                name: "Villas");
         }
     }
 }

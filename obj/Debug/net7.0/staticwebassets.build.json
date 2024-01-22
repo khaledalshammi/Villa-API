@@ -1,11 +1,19 @@
 {
   "Version": 1,
-  "Hash": "g2W2+Zx4Nx4UAXxN8uo2l0azDdka6wq0MNMpo6lbyRk=",
+  "Hash": "r4rEXLzEH6z9Q7MIWejT0Djw+ObVR9+RN8KCWAdjbOg=",
   "Source": "MagicVilla_VillaAPI",
   "BasePath": "_content/MagicVilla_VillaAPI",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "MagicVilla_VillaAPI\\wwwroot",
+      "Source": "MagicVilla_VillaAPI",
+      "ContentRoot": "C:\\Users\\khalo\\OneDrive\\سطح المكتب\\asp.net\\MagicVilla\\MagicVilla_VillaAPI\\wwwroot\\",
+      "BasePath": "_content/MagicVilla_VillaAPI",
+      "Pattern": "**"
+    }
+  ],
   "Assets": []
 }
